@@ -17,9 +17,18 @@ function errorHandler(err, req, res, next) {
     statusCode = 400;
     message = 'Validation error';
     errors = Object.values(err.errors).map(e => e.message);
-  } else if (err.code === 'SQLITE_CONSTRAINT') {
+  } else if (err.code === 'SQLITE_CONSTRAINT' || err.code === '23505' || err.code === '23503') {
+    // PostgreSQL unique violation (23505) or foreign key violation (23503)
     statusCode = 400;
     message = 'Database constraint violation';
+  } else if (err.code === '42P01') {
+    // PostgreSQL undefined table error
+    statusCode = 500;
+    message = 'Database table not found. Please ensure database is properly initialized.';
+  } else if (err.code === '42703') {
+    // PostgreSQL undefined column error
+    statusCode = 500;
+    message = 'Database schema error. Please run database migrations.';
   } else if (err.code === 'ENOENT') {
     statusCode = 404;
     message = 'Resource not found';

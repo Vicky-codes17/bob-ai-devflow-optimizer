@@ -33,8 +33,10 @@ const initDatabase = async () => {
       CREATE TABLE IF NOT EXISTS tasks (
         id SERIAL PRIMARY KEY,
         title VARCHAR(255) NOT NULL,
+        description TEXT,
+        priority VARCHAR(20) DEFAULT 'medium',
         deadline TIMESTAMP NOT NULL,
-        duration INTEGER DEFAULT 2,
+        duration DECIMAL(5,2) DEFAULT 2,
         completed BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
