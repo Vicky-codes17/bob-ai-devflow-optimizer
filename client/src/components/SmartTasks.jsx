@@ -1,6 +1,13 @@
 import React from 'react';
 
 const SmartTasks = ({ tasks, stressData }) => {
+  // Format hours to display properly
+  const formatHours = (hours) => {
+    if (hours === 0) return '0';
+    if (Number.isInteger(hours)) return hours.toString();
+    return hours.toFixed(2).replace(/\.?0+$/, '');
+  };
+
   // AI Insights based on tasks
   const generateInsights = () => {
     const insights = [];
@@ -200,7 +207,7 @@ const SmartTasks = ({ tasks, stressData }) => {
             <p className="text-xs text-gray-400 mt-1">High Priority</p>
           </div>
           <div className="p-4 bg-white/5 rounded-lg text-center border border-white/10">
-            <p className="text-2xl font-bold text-yellow-400">{tasks.reduce((sum, t) => sum + (t.duration || 0), 0)}</p>
+            <p className="text-2xl font-bold text-yellow-400">{formatHours(tasks.reduce((sum, t) => sum + (parseFloat(t.duration) || 0), 0))}</p>
             <p className="text-xs text-gray-400 mt-1">Total Hours</p>
           </div>
         </div>

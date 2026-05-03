@@ -1,11 +1,18 @@
 import React from 'react';
 
 const TaskInvestments = ({ tasks }) => {
+  // Format hours to display properly (e.g., 1.5h, 2h, 0.5h)
+  const formatHours = (hours) => {
+    if (hours === 0) return '0';
+    if (Number.isInteger(hours)) return hours.toString();
+    return hours.toFixed(2).replace(/\.?0+$/, ''); // Remove trailing zeros
+  };
+
   // Calculate task metrics
   const getTaskMetrics = () => {
-    const totalDuration = tasks.reduce((sum, t) => sum + (t.duration || 0), 0);
-    const completedDuration = tasks.filter(t => t.completed).reduce((sum, t) => sum + (t.duration || 0), 0);
-    const incompleteDuration = tasks.filter(t => !t.completed).reduce((sum, t) => sum + (t.duration || 0), 0);
+    const totalDuration = tasks.reduce((sum, t) => sum + (parseFloat(t.duration) || 0), 0);
+    const completedDuration = tasks.filter(t => t.completed).reduce((sum, t) => sum + (parseFloat(t.duration) || 0), 0);
+    const incompleteDuration = tasks.filter(t => !t.completed).reduce((sum, t) => sum + (parseFloat(t.duration) || 0), 0);
 
     return {
       totalTasks: tasks.length,
@@ -46,7 +53,7 @@ const TaskInvestments = ({ tasks }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <p className="text-3xl font-bold text-white">{metrics.totalHours}h</p>
+          <p className="text-3xl font-bold text-white">{formatHours(metrics.totalHours)}h</p>
           <p className="text-xs text-gray-500 mt-2">Across {metrics.totalTasks} tasks</p>
         </div>
 
@@ -57,7 +64,7 @@ const TaskInvestments = ({ tasks }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <p className="text-3xl font-bold text-green-400">{metrics.completedHours}h</p>
+          <p className="text-3xl font-bold text-green-400">{formatHours(metrics.completedHours)}h</p>
           <p className="text-xs text-gray-500 mt-2">{metrics.completedTasks} tasks done</p>
         </div>
 
@@ -68,7 +75,7 @@ const TaskInvestments = ({ tasks }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <p className="text-3xl font-bold text-yellow-400">{metrics.incompleteHours}h</p>
+          <p className="text-3xl font-bold text-yellow-400">{formatHours(metrics.incompleteHours)}h</p>
           <p className="text-xs text-gray-500 mt-2">{metrics.incompleteTasks} tasks left</p>
         </div>
 
@@ -92,7 +99,7 @@ const TaskInvestments = ({ tasks }) => {
             <div>
               <div className="flex justify-between mb-2">
                 <span className="text-sm text-gray-400">Completed Work</span>
-                <span className="text-sm font-semibold text-green-400">{metrics.completedHours}h / {metrics.totalHours}h</span>
+                <span className="text-sm font-semibold text-green-400">{formatHours(metrics.completedHours)}h / {formatHours(metrics.totalHours)}h</span>
               </div>
               <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden border border-white/20">
                 <div 
@@ -104,7 +111,7 @@ const TaskInvestments = ({ tasks }) => {
             <div>
               <div className="flex justify-between mb-2">
                 <span className="text-sm text-gray-400">Remaining Work</span>
-                <span className="text-sm font-semibold text-yellow-400">{metrics.incompleteHours}h / {metrics.totalHours}h</span>
+                <span className="text-sm font-semibold text-yellow-400">{formatHours(metrics.incompleteHours)}h / {formatHours(metrics.totalHours)}h</span>
               </div>
               <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden border border-white/20">
                 <div 
@@ -140,7 +147,7 @@ const TaskInvestments = ({ tasks }) => {
                     {task.priority}
                   </span>
                   <div className="text-right">
-                    <p className="text-white font-bold">{task.duration}h</p>
+                    <p className="text-white font-bold">{formatHours(parseFloat(task.duration) || 0)}h</p>
                     <p className="text-xs text-gray-500">hours</p>
                   </div>
                 </div>

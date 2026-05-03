@@ -6,6 +6,13 @@ const AIWorkspace = ({ tasks }) => {
   const [loading, setLoading] = useState(false);
   const [aiInsight, setAiInsight] = useState(null);
 
+  // Format hours to display properly
+  const formatHours = (hours) => {
+    if (hours === 0) return '0';
+    if (Number.isInteger(hours)) return hours.toString();
+    return hours.toFixed(2).replace(/\.?0+$/, '');
+  };
+
   const workspaceFeatures = [
     {
       id: 'productivity',
@@ -16,7 +23,7 @@ const AIWorkspace = ({ tasks }) => {
         stats: [
           { label: 'Active Tasks', value: tasks.filter(t => !t.completed).length, icon: '⚡' },
           { label: 'Completion Rate', value: tasks.length > 0 ? Math.round((tasks.filter(t => t.completed).length / tasks.length) * 100) + '%' : '0%', icon: '✅' },
-          { label: 'Average Duration', value: tasks.length > 0 ? Math.round(tasks.reduce((sum, t) => sum + (t.duration || 0), 0) / tasks.length) + 'h' : '0h', icon: '⏱️' },
+          { label: 'Average Duration', value: tasks.length > 0 ? formatHours(tasks.reduce((sum, t) => sum + (parseFloat(t.duration) || 0), 0) / tasks.length) + 'h' : '0h', icon: '⏱️' },
           { label: 'Overdue Count', value: tasks.filter(t => !t.completed && new Date(t.deadline) < new Date()).length, icon: '⚠️' }
         ]
       }
@@ -41,7 +48,7 @@ const AIWorkspace = ({ tasks }) => {
       content: {
         metrics: [
           { name: 'Peak Hours', value: '10 AM - 2 PM', desc: 'Most productive time' },
-          { name: 'Avg Task Duration', value: tasks.length > 0 ? Math.round(tasks.reduce((sum, t) => sum + (t.duration || 0), 0) / tasks.length) + 'h' : '0h', desc: 'Average time per task' },
+          { name: 'Avg Task Duration', value: tasks.length > 0 ? formatHours(tasks.reduce((sum, t) => sum + (parseFloat(t.duration) || 0), 0) / tasks.length) + 'h' : '0h', desc: 'Average time per task' },
           { name: 'Weekly Target', value: '40h', desc: 'Hours planned this week' }
         ]
       }
